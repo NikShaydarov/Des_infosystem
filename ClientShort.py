@@ -56,3 +56,13 @@ class ClientShort:
     # Строковое представление для вывода
     def __str__(self):
         return f"ClientShort(name='{self.name}', surname='{self.surname}', phone='{self.phone}')"
+
+    # Переопределение equals (сравнение объектов по телефону)
+    def __eq__(self, other):
+        if not isinstance(other, ClientShort):
+            return False
+        return self.phone == other.phone
+
+    # Переопределение hashCode (хеш-код на основе телефона)
+    def __hash__(self):
+        return hash(self.phone)
