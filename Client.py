@@ -9,6 +9,47 @@ class Client:
         self.set_amount(purchase_amount)
         self.set_phone(phone)
         self.set_email(email)
+        
+    def __init__(self, client_data):
+        data = client_data.split(',')
+        if len(data) < 5:
+            raise ValueError("Неверный формат данных. Ожидается минимум 5 значений.")
+
+        # Разбираем строку, проверяя наличие значений
+        if data[0].strip().isdigit():
+            # Если первое значение - это id (число)
+            self.id = int(data[0].strip())
+            self.surname = data[1].strip()
+            self.name = data[2].strip()
+            self.patronymic = data[3].strip()
+
+            if data[4].strip().isdigit():
+                # Если следующее значение - это количество покупок (amount)
+                self.amount = int(data[4].strip())
+                self.phone = data[5].strip()
+                self.email = data[6].strip()
+            else:
+                # Если значение для amount не передано
+                self.amount = 0  # по умолчанию
+                self.phone = data[4].strip()
+                self.email = data[5].strip()
+        else:
+            # Если первое значение - это фамилия, а не id
+            self.surname = data[0].strip()
+            self.name = data[1].strip()
+            self.patronymic = data[2].strip()
+
+            if data[3].strip().isdigit():
+                # Если следующее значение - это количество покупок (amount)
+                self.amount = int(data[3].strip())
+                self.phone = data[4].strip()
+                self.email = data[5].strip()
+            else:
+                # Если значение для amount не передано
+                self.amount = 0  # по умолчанию
+                self.phone = data[3].strip()
+                self.email = data[4].strip()
+
 
     def get_id(self):
         return self.id
