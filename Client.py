@@ -149,3 +149,7 @@ class Client:
     def __str__(self):
         return f"Client(id={self.id}, name='{self.name}', surname='{self.surname}', patronymic='{self.patronymic}', " \
                f"purchase_amount={self.purchase_amount}, phone='{self.phone}', email='{self.email}')"
+
+    def str_short(self):
+        # Метод str_short для вывода только имени и фамилии
+        return f"{self.name} {self.surname}"
