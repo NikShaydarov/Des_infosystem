@@ -1,25 +1,26 @@
-import re
-
 class Client(ClientShort):
-    def __init__(self, name, surname, phone, patronymic=None, purchase_amount=0, email=None):
+    def __init__(self, name, surname, phone, patronymic=None, purchase_amount=0, email=None, id=None):
         # Инициализация базового класса (ClientShort)
-        super().__init__(name, surname, phone)
-        
+        super().__init__(name, surname, phone, id=id)
         self.set_patronymic(patronymic)
         self.set_purchase_amount(purchase_amount)
         self.set_email(email)
 
     # Сеттер для отчества с использованием валидации строки из ClientShort
     def set_patronymic(self, patronymic):
-        if self.validate_string(patronymic):
+        if patronymic is None:
+            self.patronymic = None
+        elif self.validate_string(patronymic):
             self.patronymic = patronymic.strip()
         else:
             raise ValueError("Отчество не может быть пустым или содержать только пробелы.")
 
     # Валидация суммы покупки
     @staticmethod
-    def validate_purchase_amount(purchase_amount):
-        if purchase_amount < 0:
+    def validate_purchase_amount(value):
+        if not isinstance(value, (int, float)):
+            return False  # Убедитесь, что значение - число
+        if value < 0:
             return False  # Если сумма покупки отрицательная
         return True
 
@@ -28,7 +29,7 @@ class Client(ClientShort):
         if self.validate_purchase_amount(purchase_amount):
             self.purchase_amount = purchase_amount
         else:
-            raise ValueError("Сумма покупок не может быть отрицательной.")
+            raise ValueError("Сумма покупок не может быть отрицательной и должна быть числом.")
 
     # Валидация email (отдельная функция)
     @staticmethod
@@ -41,7 +42,9 @@ class Client(ClientShort):
 
     # Сеттер для email с вызовом валидации
     def set_email(self, email):
-        if self.validate_email(email):
+        if email is None:
+            self.email = None
+        elif self.validate_email(email):
             self.email = email.strip()
         else:
             raise ValueError("Неверный формат email.")
@@ -62,10 +65,11 @@ class Client(ClientShort):
 
     # Строковое представление для вывода полной информации о клиенте
     def __str__(self):
-        return (f"Client(name='{self.name}', surname='{self.surname}', patronymic='{self.patronymic}', "
-                f"purchase_amount={self.purchase_amount}, phone='{self.phone}', email='{self.email}')")
+        return (f"Client(id={self.get_id()}, name='{self.get_name()}', surname='{self.get_surname()}', "
+                f"patronymic='{self.get_patronymic()}', purchase_amount={self.get_purchase_amount()}, "
+                f"phone='{self.get_phone()}', email='{self.get_email()}')")
 
-     # Переопределение equals (сравнение объектов по телефону)
+    # Переопределение equals (сравнение объектов по телефону)
     def __eq__(self, other):
         if not isinstance(other, Client):
             return False
