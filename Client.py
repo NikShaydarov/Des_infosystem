@@ -64,12 +64,14 @@ class Client(ClientShort):
                 f"patronymic='{self.get_patronymic()}', purchase_amount={self.get_purchase_amount()}, "
                 f"phone='{self.get_phone()}', email='{self.get_email()}')")
 
-    # Переопределение equals (сравнение объектов по телефону)
+    #Переопределение equals (сравнение объектов по телефону)
+
     def __eq__(self, other):
         if not isinstance(other, Client):
             return False
-        return self.__phone == other.__phone
+        return self.get_phone() == other.get_phone()
+
 
     # Переопределение hashCode (хеш-код на основе телефона)
     def __hash__(self):
-        return hash(self.__phone)
+        return hash(self.get_phone())
