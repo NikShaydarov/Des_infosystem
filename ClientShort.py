@@ -6,70 +6,78 @@ class ClientShort:
         self.set_surname(surname)
         self.set_phone(phone)
 
-    # Валидация строки (не пустая и не состоит только из пробелов)
+    # Валидация имени (не пустое, не состоит только из пробелов, не число)
     @staticmethod
-    def validate_string(value):
-        if not value or not value.strip():
-            return False  # Если строка пустая или состоит только из пробелов
+    def validate_name(name):
+        if not name or not name.strip():
+            return False
+        if name.isdigit():
+            return False
         return True
 
-    # Валидация номера телефона
+    # Валидация фамилии (не пустая, не состоит только из пробелов, не число)
+    @staticmethod
+    def validate_surname(surname):
+        if not surname or not surname.strip():
+            return False
+        if surname.isdigit():
+            return False
+        return True
+
+    # Валидация телефона
     @staticmethod
     def validate_phone(phone):
         if not phone or not phone.strip():
-            return False  # Если телефон пустой
-        if not re.match(r'^\+?\d{10,15}$', phone):
-            return False  # Если телефон не соответствует формату
+            return False
+        if not re.match(r'^(?:\+7|8)(?:\d{10})$', phone):
+            return False
+        if not any(char.isdigit() for char in phone):
+            return False
         return True
 
-    # Валидация целого числа (неотрицательное)
+    # Валидация ID
     @staticmethod
-    def validate_int(value):
-        if not isinstance(value, int):
-            return False  # Убедитесь, что значение - целое число
-        if value < 0:
-            return False  # Если сумма покупки отрицательная
+    def validate_id(id):
+        if not isinstance(id, int) or id < 0:
+            return False
         return True
+
 
     def set_id(self, id):
-        if self.validate_int(id):
-            self.id = id
+        if self.validate_id(id):
+            self.__id = id
         else:
-            raise ValueError("ID не может быть отрицательным и должен быть целым числом.")
+            raise ValueError("ID должен быть целым числом и не отрицательным.")
 
-    # Сеттер для имени с валидацией
     def set_name(self, name):
-        if self.validate_string(name):
-            self.name = name.strip()
+        if self.validate_name(name):
+            self.__name = name.strip()
         else:
-            raise ValueError("Имя не может быть пустым или содержать только пробелы.")
+            raise ValueError("Имя не может быть пустым, содержать только пробелы или быть числом.")
 
-    # Сеттер для фамилии с валидацией
     def set_surname(self, surname):
-        if self.validate_string(surname):
-            self.surname = surname.strip()
+        if self.validate_surname(surname):
+            self.__surname = surname.strip()
         else:
-            raise ValueError("Фамилия не может быть пустой или содержать только пробелы.")
+            raise ValueError("Фамилия не может быть пустой, содержать только пробелы или быть числом.")
 
-    # Сеттер для телефона с валидацией
     def set_phone(self, phone):
         if self.validate_phone(phone):
-            self.phone = phone.strip()
+            self.__phone = phone.strip()
         else:
             raise ValueError("Неверный формат телефона или пустое значение.")
 
-    # Геттеры
     def get_name(self):
-        return self.name
+        return self.__name
 
     def get_surname(self):
-        return self.surname
+        return self.__surname
 
     def get_id(self):
-        return getattr(self, 'id', None)  # Используем getattr, чтобы избежать AttributeError
+        return getattr(self, '__id', None)
 
     def get_phone(self):
-        return self.phone
+        return self.__phone
 
     # Строковое представление для вывода
     def __str__(self):
@@ -80,8 +88,8 @@ class ClientShort:
     def __eq__(self, other):
         if not isinstance(other, ClientShort):
             return False
-        return self.phone == other.phone
+        return self.__phone == other.__phone
 
     # Переопределение hashCode (хеш-код на основе телефона)
     def __hash__(self):
-        return hash(self.phone)
+        return hash(self.__phone)
